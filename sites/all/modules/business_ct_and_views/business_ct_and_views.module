@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Business ct and views feature.
+ */
+
+include_once 'business_ct_and_views.features.inc';

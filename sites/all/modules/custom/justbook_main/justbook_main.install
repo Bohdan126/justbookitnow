@@ -1,0 +1,24 @@
+<?php
+
+function justbook_main_update_7001() {
+  $query = new EntityFieldQuery();
+  $entities = $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'business')
+    ->propertyCondition('status', 1)
+    ->execute();
+  foreach ($entities['node'] as $entity) {
+    $node = node_load($entity->nid);
+    if (!empty($node->field_open_time[LANGUAGE_NONE][0]['value2'])) {
+      if (strtotime($node->field_open_time[LANGUAGE_NONE][0]['value2']) < strtotime('now +1 days')) {
+        $node->status = 0;
+        node_save($node);
+      }
+    }
+    elseif (empty($node->field_open_time[LANGUAGE_NONE][0]['value2'])) {
+      if (strtotime($node->field_open_time[LANGUAGE_NONE][0]['value']) < strtotime('now +1 days')) {
+        $node->status = 0;
+        node_save($node);
+      }
+    }
+  }
+}

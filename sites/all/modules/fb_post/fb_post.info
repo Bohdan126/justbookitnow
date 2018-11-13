@@ -1,0 +1,12 @@
+name = Facebook Post
+description = Allows users to connect their Facebook accounts to Drupal ones and make posts to their feeds.
+package = Other
+configure = admin/config/services/fb-post
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2018-02-14
+version = "7.x-2.3+5-dev"
+core = "7.x"
+project = "fb_post"
+datestamp = "1518600126"
+

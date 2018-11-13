@@ -1,0 +1,4 @@
+name = User Contact
+description = Creates a block to send an email to user
+dependencies[] = contact
+core = 7.x

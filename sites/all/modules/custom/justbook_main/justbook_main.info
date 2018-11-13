@@ -1,0 +1,4 @@
+name = Justbookitnow main
+description = custom module
+core = 7.x
+package = Custom

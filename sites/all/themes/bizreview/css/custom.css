@@ -1,0 +1,88 @@
+﻿#block-views-list-business-block-11 h3 {
+  clear: both;
+  width: 350px;
+}
+
+#block-views-list-business-block-11 .views-field-title {
+  min-height: 80px;
+}
+#block-views-list-business-block-11 .views-field-field-address {
+  min-height: 80px;
+}
+
+#block-views-list-business-block-11 .view-list-business.view-list-business-grid .views-row:nth-child(3n+1) {
+  clear: none;
+}
+
+#block-views-list-business-block-11 .views-limit-grouping-group .views-limit-grouping .views-field-field-category-1  {
+  display: none;
+}
+
+#block-views-list-business-block-11 .views-limit-grouping-group h3 +  .views-limit-grouping .views-field-field-category-1  {
+  display: block;
+}
+
+#block-views-list-business-block-11 .views-limit-grouping-group:nth-child(n+10)   {
+  display: none;
+}
+
+#block-views-list-business-block-11 .view-content {
+  position: relative;
+}
+
+#block-views-list-business-block-11 .views-limit-grouping-group .views-limit-grouping .views-field-field-category-1  {
+  position: absolute;
+  top: -36px;
+  left: 360px;
+  width: 100%;
+  font-size: 20px;
+}
+
+#block-views-list-business-block-11 .views-limit-grouping-group .views-limit-grouping .views-field-field-category-1:hover {
+  text-decoration: underline;
+}
+
+#block-views-list-business-block-12 .views-field.views-field-field-address {
+  color: #000;
+}
+
+#block-views-list-business-block-12 .views-field.views-field-field-phone {
+  color: #000;
+}
+
+#block-views-list-business-block-12 .views-field.views-field-field-website {
+  color: #000;
+}
+.field-content-url-link{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #f5981e;
+}
+
+.page-contact #search-wrapper > .container {
+  width: 100%
+}
+.page-contact #views-exposed-form-map-list-business-page-1 .views-exposed-widgets {
+  flex-wrap: wrap;
+}
+/*.page-contact .views-exposed-widgets .views-exposed-widget.views-submit-button{
+  flex-direction: column;
+}*/
+/*.page-contact .views-exposed-form {
+  position: relative;
+  padding-bottom: 50px;
+}*/
+.page-contact #views-exposed-form-map-list-business-page-1 .views-exposed-widget.views-submit-button {
+  width: auto;
+}
+/*.page-contact #edit-submit-map-list-business {
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 75px);
+}*/
+.page-contact .views-exposed-widget .container-inline-date{
+  display: none;
+}
+.page-contact #views-exposed-form-map-list-business-page-1 .form-item-between-date-filter{
+  margin-right: 20px;
+}

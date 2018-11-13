@@ -1,0 +1,278 @@
+<?php
+
+/**
+ * @file
+ * Author Contact module main file.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function justbook_form_block_info() {
+  $blocks[0] = array(
+    'info' => t('User Contact'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function justbook_form_block_configure($delta = 0) {
+
+  $form['justbook_form_desc'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Contact description'),
+    '#description'   => t('This text will show at the top of the Author Contact block, can be used for instructions etc.'),
+    '#default_value' => variable_get('justbook_form_desc', ''),
+  );
+
+  $form['justbook_form_allow_different_name'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Allow authenticated users to use different name and email'),
+    '#default_value' => variable_get('justbook_form_allow_different_name', FALSE),
+  );
+
+  $form['justbook_form_allow_anonymous'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Allow anonymous users to contact author'),
+    '#default_value' => variable_get('justbook_form_allow_anonymous', TRUE),
+  );
+
+  $form['justbook_form_bcc'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('BCC address'),
+    '#description'   => t("Enter a comma-separated list of email addresses for all contact submissions to be BCCed to. Usually for site administration purposes. Please don't abuse privacy with this feature. Leave empty for no BCC emails."),
+    '#default_value' => variable_get('justbook_form_bcc', ''),
+  );
+
+  $form['justbook_form_form_width'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Form width for name & email fields'),
+    '#default_value' => variable_get('justbook_form_form_width', 15),
+    '#element_validate' => array('element_validate_integer_positive'),
+  );
+
+  $form['justbook_form_form_height'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Height in lines for the message textbox'),
+    '#description'   => t('Default is 4'),
+    '#default_value' => variable_get('justbook_form_form_height', 4),
+    '#element_validate' => array('element_validate_integer_positive'),
+  );
+
+  $form['justbook_form_block_display_types'] = array(
+    '#type'          => 'checkboxes',
+    '#title'         => t('Display on nodes of type'),
+    '#options'       => node_type_get_names(),
+    '#default_value' => variable_get('justbook_form_block_display_types', array()),
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function justbook_form_block_save($delta = 0, $edit = array()) {
+  variable_set('justbook_form_desc', $edit['justbook_form_desc']);
+  variable_set('justbook_form_allow_different_name', $edit['justbook_form_allow_different_name']);
+  variable_set('justbook_form_allow_anonymous', $edit['justbook_form_allow_anonymous']);
+  variable_set('justbook_form_bcc', $edit['justbook_form_bcc']);
+  variable_set('justbook_form_form_width', $edit['justbook_form_form_width']);
+  variable_set('justbook_form_form_height', $edit['justbook_form_form_height']);
+  variable_set('justbook_form_block_display_types', $edit['justbook_form_block_display_types']);
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function justbook_form_block_view($delta = '') {
+  $block = array();
+  $a = arg(1);
+  $user = user_load($a);
+  switch ($delta) {
+    case '0':
+      // Show on nodes but not on edit pages etc.
+      if ($user) {
+        $block['subject'] = t('Contact');
+
+          $block['content']['description'] = array(
+            '#prefix' => '<div class="justbook_form-desc">',
+            '#markup' => variable_get('justbook_form_desc', ''),
+            '#suffix' => '</div>',
+          );
+          $block['content']['form'] = drupal_get_form('justbook_form_form', $node);
+      }
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Define the form for the block.
+ */
+function justbook_form_form($form, &$form_state, $node) {
+  global $user;
+  $form = array();
+  $form_state['node'] = $node;
+
+  // For authenticated users, use their user name and email, unless allowed to
+  // use different.
+  if (isset($user->name) && variable_get('justbook_form_allow_different_name', FALSE) == FALSE) {
+    $form['sendername_display'] = array(
+      '#markup' => t('Your name: %name', array('%name' => $user->name)),
+      '#weight' => -2,
+      '#prefix' => '<p>',
+    );
+    $form['sendername'] = array(
+      '#type' => 'value',
+      '#value' => $user->name,
+    );
+    $form['senderemail_display'] = array(
+      '#markup' => t('Email: %email', array('%email' => $user->mail)),
+      '#weight' => -1,
+      '#prefix' => '<br />',
+      '#suffix' => '</p>',
+    );
+    $form['senderemail'] = array(
+      '#type' => 'value',
+      '#value' => $user->mail,
+    );
+  }
+  // For anonymous users, provide textfields.
+  else {
+    $form['sendername'] = array(
+      '#type'     => 'textfield',
+      '#title'    => t('Your Name'),
+      '#default_value' => isset($user->name) ? $user->name : NULL,
+      '#size'     => variable_get('justbook_form_form_width', 15),
+      '#required' => TRUE,
+      '#weight'   => -2,
+    );
+    $form['senderemail'] = array(
+      '#type'     => 'textfield',
+      '#title'    => t('Email'),
+      '#default_value' => isset($user->mail) ? $user->mail : NULL,
+      '#size'     => variable_get('justbook_form_form_width', 15),
+      '#required' => TRUE,
+      '#weight'   => -1,
+    );
+  }
+
+  $form['sendercomment'] = array(
+    '#title' 	=> t('Message'),
+    '#type' 	=> 'textarea',
+    '#rows' 	=> variable_get('justbook_form_form_height', 3),
+    '#cols' 	=> 6,
+    '#required' => TRUE,
+  );
+
+  $form['nodetitle'] = array(
+    '#type'  => 'hidden',
+    '#value' => $node->title,
+  );
+
+  $form['send'] = array(
+    '#type'  => 'submit',
+    '#value' => t('Send'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form validator for justbook_form_form().
+ */
+function justbook_form_form_validate(&$form, &$form_state) {
+
+  // Check whether the email address is valid.
+  if (!valid_email_address($form_state['values']['senderemail'])) {
+    form_set_error('senderemail', t('The e-mail address is not valid.'));
+  }
+
+}
+
+/**
+ * Submit handler for justbook_form_form().
+ */
+function justbook_form_form_submit(&$form, &$form_state) {
+  $node = $form_state['node'];
+  $author =  $user_page = user_load(arg(1));;
+  $to = $author->mail;
+  $from = '"' . $form_state['values']['sendername'] . '" <' . $form_state['values']['senderemail'] . '>';
+
+  // Create email variables.
+  $sender = new stdClass();
+  $sender->name = $form_state['values']['sendername'];
+  $sender->mail = $form_state['values']['senderemail'];
+  $params = array(
+    'sender' => $sender,
+    'sendercomment' => $form_state['values']['sendercomment'],
+    'nodetitle' => $form_state['values']['nodetitle'],
+    'referrer' => $_SERVER['HTTP_REFERER'],
+  );
+
+  drupal_mail('justbook_form', 'sendcontact', $to, language_default(), $params, $from);
+
+  $bcc = variable_get('justbook_form_bcc', '');
+  if ($bcc != '') {
+    drupal_mail('justbook_form', 'sendcontact_bcc', $bcc, language_default(), $params, $from);
+  }
+
+  // Create a watchdog entry.
+  watchdog(
+    'mail',
+    'Author Contact: %name-to was sent an e-mail from %name-from using the form on %page',
+    array(
+      '%name-to' => $to,
+      '%name-from' => $from,
+      '%page' => $params['referrer'],
+    )
+  );
+
+  // Flood control.
+  flood_register_event('justbook_form');
+
+  // Inform the user we're finished.
+  drupal_set_message(t('Contact sent from @from.', array('@from' => $form_state['values']['senderemail'])));
+
+}
+
+/**
+ * Implements hook_mail().
+ */
+function justbook_form_mail($key, &$message, $params) {
+
+  if ($key == 'sendcontact' || $key == 'sendcontact_bcc') {
+    $language = $message['language'];
+
+    if ($key == 'sendcontact') {
+      $message['subject'] = t('Contact via @site', array('@site' => variable_get('site_name', 'Your website')));
+    }
+    else {
+      $message['subject'] = t('[Bcc] Contact via @site', array('@site' => variable_get('site_name', 'Your website')));
+      $message['body'][]  = t('This is a copy of Author contact message sent from your site:');
+      $message['body'][]  = '==========';
+    }
+    $message['body'][]  = t('You have received an enquiry through @sitename on the page @nodetitle at @referrer.
+
+
+Name: @name
+
+Email: @email
+
+Enquiry:
+@comment',
+      array(
+        '@sitename'  => variable_get('site_name', t('')),
+        '@nodetitle' => $params['nodetitle'],
+        '@referrer'  => $params['referrer'],
+        '@name' 	 => $params['sender']->name,
+        '@email' 	 => $params['sender']->mail,
+        '@comment' 	 => $params['sendercomment'],
+      )
+    );
+  }
+}
