@@ -86,3 +86,13 @@
 .page-contact #views-exposed-form-map-list-business-page-1 .form-item-between-date-filter{
   margin-right: 20px;
 }
+.user-info-from-cookie #edit-account .help-block {
+  position: static;
+}
+.user-info-from-cookie #edit-account .form-type-password-confirm .row {
+  display: flex;
+  flex-direction: column;
+}
+.user-info-from-cookie #edit-account .form-type-password-confirm .form-item-pass-pass2{
+  order: 2;
+}
