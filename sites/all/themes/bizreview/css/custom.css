@@ -96,3 +96,6 @@
 .user-info-from-cookie #edit-account .form-type-password-confirm .form-item-pass-pass2{
   order: 2;
 }
+.glyphicon:empty {
+  width: 3em;
+}

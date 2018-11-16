@@ -1290,6 +1290,7 @@ a.contextual-links-trigger, #toolbar a, textarea { -webkit-transition: none; -mo
   padding: 9px 0;
   position: relative;
   text-indent: 20px;
+  width: 115px;
 }
 #views-exposed-form-map-list-business-page-1 .form-select option {
   padding: 3px 0 3px 25px;
@@ -1332,11 +1333,14 @@ a.contextual-links-trigger, #toolbar a, textarea { -webkit-transition: none; -mo
     display: none;
   }
 }
-@media (min-width: 991px) {
-  #views-exposed-form-map-list-business-page-1 #edit-title,
-  #views-exposed-form-map-list-business-page-1 .form-select {
-    width: 140px;
-  }
+@media (min-width: 992px) {
+    .page-contact #views-exposed-form-map-list-business-page-1 .views-widget .form-type-textfield  #edit-title,
+    #views-exposed-form-map-list-business-page-1 .form-select {
+        width: 69px;
+    }
+    .page-contact #views-exposed-form-map-list-business-page-1 .views-exposed-widgets .form-select {
+        width: 69px;
+    }
 }
 #views-exposed-form-map-list-business-page-1 .views-exposed-widgets {
   display: flex;
@@ -1350,10 +1354,10 @@ a.contextual-links-trigger, #toolbar a, textarea { -webkit-transition: none; -mo
   }
 }
 @media (min-width: 1199px) {
-  #block-views-exp-map-list-business-page-1 h2.block-title {
+  /*#block-views-exp-map-list-business-page-1 h2.block-title {
     margin-right: 40px;
 	padding-right: 40px;
-  }
+  }*/
   #views-exposed-form-map-list-business-page-1 .views-exposed-form .views-exposed-widget {
     padding-right: 20px;
   }
@@ -1374,7 +1378,7 @@ a.contextual-links-trigger, #toolbar a, textarea { -webkit-transition: none; -mo
     width: 85px;
   }
 }
-@media (max-width: 776px) {
+@media (max-width: 767px) {
   .view-map-list-business .leaflet-container {
     max-height: 200px;
   }
@@ -1394,6 +1398,15 @@ a.contextual-links-trigger, #toolbar a, textarea { -webkit-transition: none; -mo
     width: 290px;
     padding: 0;
 	height:38px;
+  }
+}
+@media (min-width: 768px) {
+  #views-exposed-form-map-list-business-page-1 .views-submit-button .container-inline-date {
+    width: 70px;
+  }
+
+  #views-exposed-form-map-list-business-page-1 .form-type-textfield #edit-title {
+    width: 115px;
   }
 }
 .leaflet-top, .leaflet-bottom {
